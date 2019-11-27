@@ -34,7 +34,7 @@ Udacity_Sparkify.ipynb : Jputer notebook used for this project
 
 s3n://udacity-dsnd/sparkify/mini_sparkify_event_data.json :128 MB. Data 
 
-IBM_Watson_Sparkify.ipynb : Jputer notebook in IBM Watson Studio
+IBM_Watson_Sparkify.ipynb : Jupyter notebook in IBM Watson Studio
 
 # Conclusion
  F1 Score is %92.8. on the test dataset using the Random Forest algorithm. T
