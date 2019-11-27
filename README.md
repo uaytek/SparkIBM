@@ -1,6 +1,6 @@
 # Udacity DSND Capstone Data Analysis with Spark
 Sparkify Project
-Analysis of medium_sparkify_event_data.json dataset using IBM Cloud services.
+Analysis of medium_sparkify_event_data.json dataset using IBM Cloud services. 
 
 ## Installation
 This project uses the following software and python libraries
@@ -31,6 +31,10 @@ Split data into training, and test data and Transform feature engineered data.  
 Sparkify.ipynb : Jputer notebook used for this project
 
 s3n://udacity-dsnd/sparkify/mini_sparkify_event_data.json :128 MB. Data 
+
+The project was started to develop on EMR cluster, but there is no success building the model because of a specific error in StandardScaler code. The same code copied to IBM Watson Studio, there was no problem in any code line.
+
+IBM_Watson_Sparkify.ipynb : Jputer notebook in IBM Watson Studio
 
 # Conclusion
  F1 Score is %92.8. on the test dataset using the Random Forest algorithm. T
