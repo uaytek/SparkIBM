@@ -10,7 +10,7 @@ This project uses the following software and python libraries
 - Pandas
 
 ## Project Overview
-Sparkify data consist of users interaction with music stream data. There are two user service levels, paid and free. Users can also upgrade and downgrade their service. Events such as playing a song,  like or diskike a song, are all recorded. 
+Sparkify data consist of users interaction with music stream data. There are two user service levels, paid and free. Users can also upgrade and downgrade their service. Also, events such as playing a song, like or diskike a song, are all recorded. 
 
 The goal of this project is then to analyse users interaction data and predict which group of users are expected to churn - either downgrading from premium to free or cancel thier subscriptions altogether.
 
@@ -29,7 +29,8 @@ Split data into training, and test data and Transform feature engineered data.  
 
 ## File Description
 Sparkify.ipynb : Jputer notebook used for this project
-s3n://udacity-dsnd/sparkify/mini_sparkify_event_data.json :128 MB.  Data 
+
+s3n://udacity-dsnd/sparkify/mini_sparkify_event_data.json :128 MB. Data 
 
 # Conclusion
  F1 Score is %92.8. on the test dataset using the Random Forest algorithm. T
