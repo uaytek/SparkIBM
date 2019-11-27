@@ -28,11 +28,11 @@ Clean data, prepare features with right types for machine learnings
 Split data into training, and test data and Transform feature engineered data.  Build a machine learning model to train using training data and evaluate it. 
 
 ## File Description
-Sparkify.ipynb : Jputer notebook used for this project
+The project was started to develop on EMR cluster, but there is no success building the model because of a specific error in StandardScaler code. The same code copied to UDACITY workspace and IBM Watson Studio, there was no problem in any code line.
+
+Udacity_Sparkify.ipynb : Jputer notebook used for this project
 
 s3n://udacity-dsnd/sparkify/mini_sparkify_event_data.json :128 MB. Data 
-
-The project was started to develop on EMR cluster, but there is no success building the model because of a specific error in StandardScaler code. The same code copied to IBM Watson Studio, there was no problem in any code line.
 
 IBM_Watson_Sparkify.ipynb : Jputer notebook in IBM Watson Studio
 
