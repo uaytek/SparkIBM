@@ -70,14 +70,14 @@ The features are listed below.
 11. year - last login year
 
 ## Implementation
-PySpark and SparkML libraries to model, refine and evaluate the solution. 
+PySpark and SparkML libraries are used for  modelling, refinning and evaluating the solution. 
 
 ### Data transformation, data splitting  
 
 Data was splitted 20% for trainning and 80% for testing, 
-The transformer VectorAssembler is used to combine a given list of columns into a single vector column so that decision tree can be used for modelling. 
+The transformer VectorAssembler is used for combining a given list of features into a single vector column so that decision tree can be used for modelling. 
 
-StandardScaler is also used normalizing the single vector. 
+StandardScaler is also used for normalizing this single vector. 
 
 ### Model Training
 
