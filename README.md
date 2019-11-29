@@ -1,6 +1,4 @@
 # Udacity DSND Capstone Data Analysis with Spark
-Sparkify Project
-Analysis of medium_sparkify_event_data.json dataset using IBM Cloud services. 
 
 ## Installation
 This project uses the following software and python libraries
@@ -12,15 +10,17 @@ This project uses the following software and python libraries
 ## Project Overview
 Sparkify data consist of users interaction with music stream data. There are two user service levels, paid and free. Users can also upgrade and downgrade their service. Also, events such as playing a song, like or diskike a song, are all recorded. 
 
-The goal of this project is then to analyse users interaction data and predict which group of users are expected to churn - either downgrading from premium to free or cancel thier subscriptions altogether.
+The goal of this project is then to analyse users interaction data and predict which group of users are expected to churn - either downgrading from premium to free or cancel thier subscriptions.
 
 ## Problem Statement
-The first task  to predict the churned group from data is data exploration to define the churn and to idenntify the features. Especially page data that gives info about the users visit has relevant information about the churn. 
+The first task to predict the churned group from data is data exploration to define the churn and to idenntify the features. Especially page data that gives info about the users visit has relevant information about the churn. 
 
-Identifying catefory columns also helped for defining some features. Main focus definning features is the users main events in the system. So some questions should be answered like how many songs and in which hour they are listening in a day, do they have interaction to system, do they have error during they are listenning music.
+Identifying category columns also helped for defining some features. Main focus definning features is the users main events in the system. So some questions should be answered like how many songs and in which hour they are listening in a day, how they interact with other users or pages, do they have any error in the system.
 
 ## Metric
+The problem is to identify users who are about to churn, so we should prevent false negative results and focus on recall (true-positive). 
 
+F1 score is also included as a metric, because precision can also be considered after identifying possible churn users. 
 
 ## Data Exploration
 There are Four categories; gender, level, auth and method used in data. gender and level added to feature list. Because auth and method gives info about the technical system, they were not included in list. 
@@ -54,23 +54,26 @@ he pages that visited by users gives many information of user events and definni
 
 
 ### Define Churn 
-Cancellation Confirmation events defined the churn. 1 as churned and 0 stayed users.
+Cancellation Confirmation events defined the churn. This event can be define in page data. 1 as churned and 0 stayed users.
 
 ### Feature Engineering
 
-All features are listed below. Label coulumn is the churn values. 
-+------+-------+-------+----+---+-----+----+-----------+--------------+----------------+--------------+-----------+-----+
-|userId|is_male|is_paid|hour|day|month|year|songs_total|thumbsup_Total|thumbsdown_total|downgradeTotal|error_count|label|
-+------+-------+-------+----+---+-----+----+-----------+--------------+----------------+--------------+-----------+-----+
-|   124|      0|      1|  15| 30|   11|2018|       4079|           171|              41|            41|          6|    0|
-|    51|      1|      1|   7| 17|   10|2018|       2111|           100|              21|            23|          1|    1|
-|    15|      1|      1|   4| 25|   11|2018|       1914|            81|              14|            28|          2|    0|
-|    54|      0|      1|  19| 12|   11|2018|       2841|           163|              29|            39|          1|    1|
-|   155|      0|      1|  11| 28|   11|2018|        820|            58|               3|            12|          3|    0|
-+------+-------+-------+----+---+-----+----+-----------+--------------+----------------+--------------+-----------+-----+
+The features are listed below. 
+
+1. userId - initial id of the user
+2. gender - user's gender
+3. songs_total - total songs of events per day for the user
+4. thumbs_up - total of thumbs up for each users
+5. thumbs_down - total of thumbs down for each users
+6. downgrade_total - total numbers of downgrade
+7. error count - total number errors the user had 
+8. hour - last login hour
+9. day - last login date
+10. month - last login date
+11. year - last login year
 
 ## Implementation
-PySpark and SparkML libraries to implement the solution. 
+PySpark and SparkML libraries to model, refine and evaluate the solution. 
 
 ### Data transformation, data splitting  
 
@@ -79,21 +82,27 @@ The transformer VectorAssembler is used to combine a given list of columns into 
 
 StandardScaler is also used normalizing the single vector. 
 
-
 ### Model Training
 
 RandomForestClassifier is used for modelling. Because the initial recall and F1 Score is high no other models used. 
 
 The next step is using coss validation to find the ideal hyper-parameters for Random Fores Classifier.The ideal paramneters are MaxDepth 5 and numTrees = 20. 
 
+### Refinement 
+
+CrossValidator method used for refinement. The best solution in this model for RandomForestClassifier is impurity = gini, naxDepth =	8,	numTrees = 20 and with this parameter F1 Score is %95.1.
+
 ## File Description
-The project was started to develop on EMR cluster, but there is no success building the model because of a specific error in StandardScaler code. The same code copied to UDACITY workspace and IBM Watson Studio, there was no problem in any code line.
 
-Udacity_Sparkify.ipynb : Jputer notebook used for this project
-
-s3n://udacity-dsnd/sparkify/mini_sparkify_event_data.json :128 MB. Data 
-
-IBM_Watson_Sparkify.ipynb : Jupyter notebook in IBM Watson Studio
+Udacity_Sparkify .ipynb : Jupyter notebook 
 
 # Conclusion
- F1 Score is %92.8. on the test dataset using the Random Forest algorithm. T
+ Initial F1 Score and recall is %86.6. After refinement, the scores  Recall and F1 score improved to %%93.3 
+ 
+ ## Future Improvements
+ 
+- More features can be included like more user events such as Add Friend, Add a Playlist and location, status can also be included. 
+- Different user agents can be analysed in its own data because they might have different user experience. 
+- Artist and songs popularity can also be analysed. 
+- Add a recommendation engine for users.
+- Use larger data for better results
