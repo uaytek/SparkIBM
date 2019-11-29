@@ -27,31 +27,28 @@ There are Four categories; gender, level, auth and method used in data. gender a
 
 he pages that visited by users gives many information of user events and definning features like thump  
 
-|               About|
-|          Add Friend|
-|     Add to Playlist|
-|              Cancel|
-|Cancellation Conf...|
-|           Downgrade|
-|               Error|
-|                Help|
-|                Home|
-|               Login|
-|              Logout|
-|            NextSong|
-|            Register|
-|         Roll Advert|
-|       Save Settings|
-|            Settings|
-|    Submit Downgrade|
-| Submit Registration|
-|      Submit Upgrade|
-|         Thumbs Down|
-|           Thumbs Up|
-|             Upgrade|
-+--------------------+
-
-
+- About
+- Add Friend
+- Add to Playlist
+- Cancel
+- Cancellation Conf...
+- Downgrade
+- Error
+- Help
+- Home
+- Login
+- Logout
+- NextSong
+- Register
+- Roll Advert
+- Save Settings
+- Settings
+- Submit Downgrade
+- Submit Registration
+- Submit Upgrade
+- Thumbs Down
+- Thumbs Up 
+- Upgrade
 
 ### Define Churn 
 Cancellation Confirmation events defined the churn. This event can be define in page data. 1 as churned and 0 stayed users.
