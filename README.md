@@ -94,7 +94,12 @@ CrossValidator method used for refinement. The best solution in this model for R
 Udacity_Sparkify .ipynb : Jupyter notebook 
 
 # Conclusion
- Initial F1 Score and recall is %86.6. After refinement, the scores  Recall and F1 score improved to %%93.3 
+ 
+Sparkify data features are mostly system created like page info, time, user level, error; thus, not much effort needed to re-formatting its data or dealing with feature's null values. So, this project also shows that how application's logging processes should be taken into consideration to support machine learnning algorithms. 
+
+Although this project implementation initially started on Amazon Aws,  there was a session termination in StandartScalar code. The same code works fine on IBM Watson and Udacity workspace.
+
+ Initial F1 Score and recall is %86.6. After refinement, the scores  "Recall" and "F1 score" improved to %%93.3. With this result, it is time to continue with the refined model on a larger dataset.  This will rasie the robustness of the model and improve customer management. 
  
  ## Future Improvements
  
