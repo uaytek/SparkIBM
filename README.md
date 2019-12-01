@@ -8,14 +8,14 @@ This project uses the following software and python libraries
 - Pandas
 
 ## Project Overview
-Sparkify data consist of users interaction with music stream data. There are two user service levels, paid and free. Users can also upgrade and downgrade their service. Also, events such as playing a song, like or dislike a song, are all recorded. 
+The goal of this project is to analyse users interaction data and predict which group of users are expected to churn - either downgrading from premium to free or cancel thier subscriptions.
 
-The goal of this project is then to analyse users interaction data and predict which group of users are expected to churn - either downgrading from premium to free or cancel thier subscriptions.
+Sparkify data consists of users interaction with music stream data. There are two user service levels, paid and free. Users can also upgrade and downgrade their service. Also, events such as playing a song, like or dislike a song, are all recorded. 
 
 There is also an optional cloud deployment either on  Amazon Aws or IBM Watson in the project. Both cloud deployment was tried and IBM Watson was comparable easy for deployment. It does not require any default module installation like pandas, plotly, or no session termination in any code line. 
 
 ## Problem Statement
-The first task to predict the churned group from data is data exploration to define the churn and to idenntify the features. Especially page data that gives info about the users visit has relevant information about the churn. 
+The first task to predict the churned group from data is data exploration to define the churn and to idenntify related features. Especially page data that gives info about the users visit has relevant information about the churn. 
 
 Identifying category columns also helped for defining some features. Main focus definning features is the users main events in the system. So some questions should be answered like how many songs and in which hour they are listening in a day, how they interact with other users or pages, do they have any error in the system.
 
@@ -25,9 +25,9 @@ The problem is to identify users who are about to churn, so we should prevent fa
 F1 score is also included as a metric, because precision can also be considered after identifying possible churn users. 
 
 ## Data Exploration
-There are Four categories; gender, level, auth and method used in data. gender and level added to feature list. Because auth and method gives info about the technical system, they were not included in list. 
+There are four categories; gender, level, auth and method used in data. gender and level added to feature list. Because auth and method gives info about the technical system, they were not included in feature list. 
 
-he pages that visited by users gives many information of user events and definning features like thump  
+The pages that visited by users gives many information of user events and definning features like thumpup - thumbdown, how much time spending on listening music. 
 
 - About
 - Add Friend
@@ -57,7 +57,7 @@ Cancellation Confirmation events defined the churn. This event can be define in 
 
 ### Feature Engineering
 
-The features are listed below. 
+After data exploration, the features selected for the model listed below. 
 
 1. userId - initial id of the user
 2. gender - user's gender
@@ -97,11 +97,11 @@ Udacity_Sparkify .ipynb : Jupyter notebook
 
 # Conclusion
  
-Although Sparkify project implementation initially started on Amazon Aws,  there was a session termination in StandartScalar code. The same code works fine on IBM Watson and Udacity workspace. Some modules like pandas, plotly are also needed to install on Amazon Aws before starting the project. Whereas on IBM Watson, after adding an initial code lines for dataset connection, no nwed any installation and all code lines are executed without session termination.  
+Although Sparkify project implementation initially started on Amazon Aws,  there was a session termination on StandartScalar code execution. The same code works properly on IBM Watson and Udacity workspace. Some modules like pandas, plotly are also needed to install on Amazon Aws before starting the project. Whereas on IBM Watson, after adding an initial code lines for dataset connection, no nwed any module installation and all code executed without session termination.  
 
-Sparkify data features are mostly system created like page info, time, user level, error; thus, not much effort needed to re-formatting its data or dealing with feature's null values. So, this project also shows that how application's logging processes should be taken into consideration to support machine learning algorithms during its development. 
+Sparkify data features are mostly system created like page info, time, user level, error; thus, not much effort needed to re-formatting its data or dealing with null values in feature. So, this project also shows that how application's logging processes should be taken into consideration to support machine learning algorithms during its development. 
 
-Machine learning model on sparkify data initially produced  F1 Score and recall is %86.6. After refinement, the scores  "Recall" and "F1 score" improved to %%93.3. With this result, it is time to continue with the refined model on a larger dataset.  This will raise the robustness of the model and improve customer management. 
+On sparkify data, machine learning model initially produced F1 Score and recall %86.6. After refinement, the scores  "Recall" and "F1 score" improved to %%93.3. With this result, it is time to continue with the refined model on a larger dataset.  This will raise the robustness of the model and improve customer management. 
  
  ## Future Improvements
  
