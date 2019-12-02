@@ -100,15 +100,15 @@ Sparkify data has variance of user expereince like song play, thumbs-up, thumbs-
 
 Navie Bayes produces better in categorial variables, whereas there are more numerical features in Sparkify data. That might be the reason that Navie Bayes has lower results than Random Forrest.
 
-Logistic regression might be expected a better model because of a binary outcome churn and not churn, the data better modelled with both classification and regression on a Random Forest model.
+Logistic regression might be expected a better model because of a binary outcome churn and not churn, the data better modelled with both classification and regression on a Random Forest model
+
+It initially produced F1 Score and recall is %86.6. After refinement, the scores "Recall" and "F1 score" improved to %%93.3. With this result, it is time to continue with the refined model on a larger dataset. This will raise the robustness of the model and improve customer management.
 
 ## Conclusion
  
 Although Sparkify project implementation initially started on Amazon Aws,  there was a session termination on StandartScalar code execution. The same code works properly on IBM Watson and Udacity workspace. Some modules like pandas, plotly are also needed to install on Amazon Aws before starting the project. Whereas on IBM Watson, after adding an initial code lines for dataset connection, no nwed any module installation and all code executed without session termination.  
 
 Sparkify data features are mostly system created like page info, time, user level, error; thus, not much effort needed to re-formatting its data or dealing with null values in feature. So, this project also shows that how application's logging processes should be taken into consideration to support machine learning algorithms during its development. 
-
-On sparkify data, machine learning model initially produced F1 Score and recall %86.6. After refinement, the scores  "Recall" and "F1 score" improved to %%93.3. With this result, it is time to continue with the refined model on a larger dataset.  This will raise the robustness of the model and improve customer management. 
  
  ## Future Improvements
  
