@@ -13143,7 +13143,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import libraries</span>
@@ -13158,7 +13158,7 @@ div#notebook {
 
 <span class="kn">from</span> <span class="nn">pyspark.ml.feature</span> <span class="k">import</span> <span class="n">VectorAssembler</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">IndexToString</span><span class="p">,</span> <span class="n">StringIndexer</span><span class="p">,</span> <span class="n">VectorIndexer</span>
 
-<span class="kn">from</span> <span class="nn">pyspark.ml.classification</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">pyspark.ml.classification</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">NaiveBayes</span><span class="p">,</span> <span class="n">LogisticRegression</span>
 <span class="kn">from</span> <span class="nn">pyspark.mllib.util</span> <span class="k">import</span> <span class="n">MLUtils</span>
 
 <span class="kn">from</span> <span class="nn">pyspark.mllib.evaluation</span> <span class="k">import</span> <span class="n">BinaryClassificationMetrics</span><span class="p">,</span>  <span class="n">MulticlassMetrics</span>
@@ -13226,7 +13226,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">GetData</span><span class="p">(</span><span class="s2">&quot;mini_sparkify_event_data.json&quot;</span><span class="p">)</span> 
@@ -13244,7 +13244,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[48]:</div>
+    <div class="prompt output_prompt">Out[26]:</div>
 
 
 
@@ -13311,7 +13311,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
@@ -13327,15 +13327,18 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[7]:</div>
+    <div class="prompt"></div>
 
 
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-25-3c9a60fd698f&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>df<span class="ansi-blue-fg">.</span>count<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
 
-
-<div class="output_text output_subarea output_execute_result">
-<pre>286500</pre>
+<span class="ansi-red-fg">NameError</span>: name &#39;df&#39; is not defined</pre>
 </div>
-
 </div>
 
 </div>
@@ -13803,11 +13806,17 @@ only showing top 10 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gender_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;userId&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">)</span> \
-    <span class="o">.</span><span class="n">dropDuplicates</span><span class="p">()</span><span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">drawpie</span><span class="p">(</span><span class="n">catcolumn</span><span class="p">,</span><span class="n">title</span><span class="p">):</span>
+    <span class="n">cat_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;userId&#39;</span><span class="p">,</span> <span class="n">catcolumn</span><span class="p">)</span><span class="o">.</span><span class="n">dropDuplicates</span><span class="p">()</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="n">catcolumn</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+    <span class="n">cat_df</span> <span class="o">=</span> <span class="n">cat_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">cat_df</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">cat_df</span><span class="p">[</span><span class="n">catcolumn</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13817,41 +13826,10 @@ only showing top 10 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gender_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;userId&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">dropDuplicates</span><span class="p">()</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gender_df</span> <span class="o">=</span> <span class="n">gender_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">gender_df</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">gender_df</span><span class="p">[</span><span class="s2">&quot;gender&quot;</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;User gender ratio.&quot;</span><span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">drawpie</span><span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span><span class="s2">&quot;User gender ratio.&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13871,6 +13849,76 @@ only showing top 10 rows
 
 <div class="output_png output_subarea ">
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWQAAAD7CAYAAABdXO4CAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAADl0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uIDIuMS4wLCBodHRwOi8vbWF0cGxvdGxpYi5vcmcvpW3flQAAGhpJREFUeJzt3Xm4XVV9//H3NzfzwEnIPJ+Q3CsBCnlsAbH9Ka2ligcralGGFlQEfsX+KBWlx5+23VhoDyJVbEERHBCtCogyHMVGUQtOSAIECFOTHDLPyU5CQoZ7Vv/Y+yaHa4Y7nrWHz+t5znNvznQ/J3nyycraa69tzjlERMS/Ab4DiIhIRIUsIpIQKmQRkYRQIYuIJIQKWUQkIVTIIiIJoUKWTDKzn5nZh3znaGRmz5rZ6b5zSHKpkHPGzJyZzel0X2Bm3/CVKYvM7Gtmdm3jfc65451zP/MUSVJAhSz9wswG+s7QE13JndbPJsmnQpbXMLNxZvagmW01s81m9oiZDYgfm2Jm3zWzDWa2zMyuaHhdYGb3mNk3zGwb8P6DvPdYM3vAzLaZ2W/N7Foze7Th8WPNbH78c18ws/c2PPY1M7vZzKpmtt3MfmNmsxseP8PMnjez0Mz+A7BOP/uDZvacmW0xsx+Z2cyGx5yZfdjMXgJeOkjuYvyci81sOfBwfP/dZrY2/pn/bWbHx/dfClwAXG1mO8zsgfj+mpn9afz9EDP7nJmtjm+fM7Mh3frDksxRIUtnVwErgfHAROD/Ay4u5QeAp4CpwFuAK83srQ2vfSdwDzAa+OZB3vtm4BVgEnBRfAPAzEYA84H/BCYA5wG3dJRc7DzgGmAM8D/AdfFrxwHfBT4JjAOWAH/Y8N5nx5/j3fHnegT4VqdsZwOnAscd5vfmzcBcoOMz/xBojfMu7PjMzrkvxd9/2jk30jn3joO81yeANwDzgJOAU+L8kmMqZOlsLzAZmOmc2+uce8RFG56cDIx3zn3KObfHObcUuA04t+G1v3LOfd85V3fO7Wp8UzNrAd4D/JNzbqdzbjFwR8NTzgJqzrmvOuf2OecWEpXsXzQ8517n3GPOuX1EhTcvvv/twGLn3D3Oub3A54C1Da+7DPhX59xz8Wv/BZjXOEqOH9/cOXcngXPulY7nOOe+4pzb7pzbDQTASWZWOMzrG10AfMo5t945t4HoH5q/6uJrJaNUyPnTDgzqdN8goiIGuIFo9PlfZrbUzMrx/TOBKfFUxlYz20o06pzY8D4rDvNzxwMDOz2n8fuZwKmd3v8CotF0h8aS3QmMjL+f0vhe8T8gnd/7pob33Uw0pTG1i9l/5zlm1mJmFTNbEk/R1OKHxnXhfToyv9zw65fj+yTHdHAif5YDReC5hvtmAS8COOe2E01bXBVPF/zUzH5LVEbLnHOth3nvw20duAHYB0zr+FnA9IbHVwA/d86d0fWPst+axvcyMzvIe1/nnDvYNEqHrmx72Pic84mmaP6UqIwLwBYOzF0f6f1WE/1D8Wz86xnxfZJjGiHnz3eAT5rZNDMbEB9kegfR3C9mdpaZzYlLbRvRiLodeAzYZmZ/b2bD4hHiCWZ2cld+qHOuHbgXCMxsuJkdC1zY8JQHgTYz+yszGxTfTjazuV14+ypwvJm9O14BcQWvHVl/Efh4w0G3gpmd05XchzEK2A1sAoYTTYM0Wgccc5jXf4voz2F8PAf+j4CWHuacCjl/PgX8EniUaET3aeAC59wz8eOtwI+BHcCvgFuccz+LC/UdRPO2y4CNwO1EI8Ou+pv4+WuBO4lKaTfsH5n/GdGc9Or4OdcDR1x54JzbCJwDVIgKshX4RcPj34vf69vx9MIzwJndyH0wXyeaZlgFLAZ+3enxLwPHxdMk3z/I668FHgcWAU8THRS8FsDMZsSrM2b0MqOkjGmDevHFzK4HJjnnLjrik0VyQCNkaZp4nfGJFjkFuBj4nu9cIkmhg3rSTKOIpimmAOuBG4H7vCYSSRBNWYiIJISmLEREEkKFLCKSECpkEZGEUCGLiCSECllEJCFUyCIiCaFCFhFJCBWyiEhCqJBFRBJChSwikhAqZBGRhNDmQiKdmFk70R7FHc52ztU8xZEc0eZCIp2Y2Q7n3MgjP1Okb2nKQkQkITRCFumk05TFMufcu3zmkfxQIYt0oikL8UVTFiIiCaFCFhFJCBWyiEhCaA5ZRCQhNEIWEUkIFbKISEKokEVEEkJ7WUgiFcvVocCI+Db8EF+HAQ7YB+ztwte9wA5gC7ClVintbd4nEjkyHdSTpiiWqy3ABGDKQW6T46+TgFFEhduM/73tL2dgI7AOWN/p6wpgSa1S2tGEPJJzKmTpM8VydSRwLHAcMDf+fjpR2U4AWvyl67X1wBLgfzp9XVKrlDb4DCbZoUKWbiuWq0dzoHQ7vs4lKl/zGM2XbRwo6WeBx4HHa5XSOq+pJHVUyHJYxXL1KOANwBuB04B5RKNdObJVxOUMLCAqaY2m5ZBUyPIaxXK1lah8O27HodU4fWk5cTkDjwG/qFVKu/xGkqRQIedYsVwdCJwK/B+i0e9pwHivofJnN/BLYD7wY2BBrVKq+40kvqiQc6ZYro4DzgRKwFuB0X4TSSebgZ8SFfT8WqW01HMeaSIVcg4Uy9V5RAV8FnAKmoJIk2XE5Qw8pOV32aZCzqBiuToCeAtRAb8dmOo3kfSRXUAV+A5Q1dxz9qiQMyI+8eLPgAuBdxKdxSbZtQN4gKicH6pVSrs955E+oEJOuWK5+nvARcAFRGe6Sf6EwH1E5Txfp4Snlwo5hYrl6gSiAr4IOMlzHEmWzcA9wBdqldKTvsNI96iQU6JYrg4hmoq4kGh1hDaGkiP5JXAzcE+tUtrjO4wcmQo54Yrl6mTgcuAytEZYemY9cBtwa61SWuE7jByaCjmhiuXqHwBXAu8FBnmOI9nQDtwP3FyrlH7iO4z8LhVyghTLVSNapvb3RGfPifSX54mmM26vVUqv+g4jERVyAsSnMJ8HXA2c4DmO5Msa4F+BL2npnH8qZI/iIr6EaEQ803McybeVRMV8uw4A+qNC9qRYrr4H+BegzXcWkQbLgeuAr2o9c/OpkJusWK7+EfBpop3VRJKqBlwL3FGrlPZ5zpIbKuQmKZarxwIVorXEImmxBPhErVL6ju8geaBC7mfFcnUScA1wMem+ppzk24+BD9cqpRd9B8kyFXI/ic+sKwMfI7pkvUja7QFuAK7TTnP9Q4XcD4rl6mnAl4ku/CmSNcuAK2qV0oO+g2SNCrkPFcvV4URHqK9Am8BL9t1PVMwv+w6SFSrkPlIsV08Hbgdme44i0kw7iVZjfEbL5HpPhdxLxXJ1FNG82qWAeY4j4stC4PxapfSC7yBppv9W90KxXH0b8CzRTmwqY8mz1wMLi+XqZb6DpJlGyD1QLFcHA58l2hZTRF7rfuDiWqW00XeQtFEhd1OxXJ1KdEWGN/jOIpJgK4Fza5XSL3wHSRMVcjcUy9U3E123bKLvLCIpsA/4BHBDrVJS0XSB5pC7qFiufoTobCWVsUjXDASuB+4vlqtjfIdJA42Qj6BYro4gWs52ru8sIin2AnBmrVJa5jtIkqmQD6NYrrYC96JN40X6wjqgVKuUFvgOklSasjiEYrn6JuC3qIxF+spE4OfFcvVM30GSSoV8EMVy9a3AQ0DBdxaRjBlBNKf8Id9BkkiF3EmxXH030TrKYb6ziGTUQOC2Yrn6z76DJI3mkBsUy9ULga+gfYtFmuUO4BLtgxFRIceK5epfE10WXadAizTXg8C7VcqasgCgWK5eDdyCyljEh7OAO4rlau77KPe/AcVy9Rqixesi4s95wL/7DuFbrgu5WK5eDvyj7xwiAsDlxXL1Wt8hfMrtHHKxXC0B96EDeCJJ89FapXSj7xA+5LKQi+XqPOARYKTvLCJyUBfXKqWv+A7RbLkr5Hj7zN8AU31nEZFDagfeV6uUvus7SDPlqpCL5epI4FHgJN9ZROSIXgVOrVVKi3wHaZbcHNQrlqstwF2ojEXSYihwVzyQyoXcFDLwb4A2NRFJl9cBt/oO0Sy5mLKId5f6ge8cItJjl9Yqpdt8h+hvmS/kYrl6NPAMMNl3FhHpsVzMJ+dhyuILqIxF0i4X88mZLuRiuXoe8F7fOUSkT2R+PjmzUxbFcnUK0VSFLq4oki3vqVVK9/oO0R+yPEL+MipjkSy6sViuDvUdoj9kspCL5eqlwNt85xCRflEErvYdoj9kbsqiWK6OApYBY31nEZF+sxM4tlYprfAdpC9lcYR8FSpjkawbDnzGd4i+lqkRcrFcHQcsBUb5ziIiTXF6rVL6ue8QfSVrI+SPozIWyZPPx/vUZEJmCrlYrk4DLvedQ0Sa6kTg/b5D9JXMFDLRpZgyuRRGRA7rSt8B+kom5pCL5WorsBgY6DuLiHjxllql9LDvEL2VlRHyx1EZi+TZ3/oO0BdSP0IulqujgdXAMN9ZRMSbOjCnVikt8x2kN7IwQv5LVMYieTcA+BvfIXorC4V8ie8AIpIIFxfL1RG+Q/RGqudd9/3TmHlPDxnSstKNf/SZerF9oWsd9kS9dfxLbur0dlpS/dlEpNsKwEXALb6D9FSqS2ug1c8fxa7j59py5g5Yzjn8NwDOsXcPA5eud2M2vOimvfpEfc7Ax13b6Gfqs6bvYPhRnmOLSP85nxQXcnoP6gUFI9pEaGZ3XtbubN1WRq6puUnbnqrPdgvqbaOecrMnr3TjdVURkfRrB8bVKqWtvoP0RJpHyKfRzTIGaDE3cSzbJ4617fz+gJf4IA8B4Bw7djJ0xSo3dstiN3PvwnrbkIX1OeNecDNm7GXg4L4OLyL9ogU4A7jbd5CeSHMhn9OXb2bGyBG8OrfNVtHGKs5u+SUAztG+l5aXNzJ6/Uv1qTufcHMGLKi3jVlUP2ZayMjRfZlBRPrEmaiQm+4Pm/FDzGgZTPvMKWyaOaVlE2/mwEVv6842hgxf/bKbFD5dn1VfUG8b8aSbPanmJk0Fs2bkE5Hf8VbfAXoqnXPIQWEQsB0Y4jvKwTjHrl0MXr7Gjd38vJuxZ2G9dfCCetvRz7vpM15liNZMi/S/ebVK6SnfIborrSPkE0loGQOYMWw4e14329YwmzWUWn4DgHPU99GycjOj1i6pT3klnv4oLKofM2Ujo8d5ji2SJW8DVMhN8ge+A/SEGQMG0T5tIlunTWzZyhtZvP+xumPLdoavXOEmhM/UZ7UvcK3Dn6jPmbDUTZlWZ0Bm9nsVaZK3Adf7DtFdKuSEGGCMKbBzTMFqnDCgxrn8FADn2L2bQcvWuTEbn3fTdy+stw1cWG8d+6wrTt/J0FSflSTSj37Pd4CeSOsc8hPAPN8xfHIO186AtVsYtWapm7z9qfpsW1BvO2pR/ZjJaxg70Xc+kQQYk7b1yOkr5KAwlOiAXlpH9/3OOcIdDFu50o3butgV9y2otw5dWG8b/5KbOkOnlEuOnFyrlB73HaI70viXcx7pzN00ZhRGsasw11YwlxW8p+URYP8p5cs2MHrDi/VpuxbWW1sWuLYxz9SL07YzouA5tkhfmwOokPvZ630HSCszBg1h36xpbJw1rWUjf9Ly5P7H2p2tDxm5epmbtG1R/RgW1NtGPuVmT1rhxk/WmmpJqVbfAborjYU83neALGoxN+Fotk84Oj6l/AP8CADneGUnQ1asduM2L3Yz4lPKW8e+4KbP2MOgxC49FCEaIadKGgtZKwuayIwRI9h9bKutopVVvLPlV8D+U8qXb6KwLj6lvCVeUz1tK6PGeI4tAirkphjuO4DsP6V8xmQ2z5jcspk38fT+x+rONm1j+MqX3cRtB04pnzOx5iZOdQzIwkURJB1m+Q7QXSpk6XMDzI0dzStjR9tSThqwlL/kJ0B0SvmrDF6xxh296Xk3Y8+CetughfXWcc+5GdN1Srn0g5G+A3RXGgtZUxYpZcawYexpO8bWcgxreXvLY8D+NdWrNnHU2iX1KTuedHMGLKi3HrWofszUDYzRKeXSU6nbNjeNhawRcsaYYQOpT53I1qkHOaV86w6Gr1zhxm+NTykf9kS9dcISN2W6TimXIxjkO0B3pfHEkIeBP/YdQ/xyjj27GbRinRuz4UU3ffdyNwEHWp4nr7GDYadfee1XU1NyGiFLKpkxeCh7Z8+09bNnst53HEkmRxCmpowB0njEWwd/RKQrdvsO0F1pLORtvgOISCqokJvgZd8BRCQVVMhNUPMdQERSYZPvAN2VxkLWCFlEuuI53wG6S4UsIlm1+MhPSZY0FnLNdwARSQWNkJtgOZCqtYUi4oVGyP0uCF8F1vmOISKJVgee9x2iu9JXyBHNI4vI4SyLB2+pktZCfvLITxGRHEvddAWkt5Af9h1ARBJNhdxED6MDeyJyaKm62nSHdBZyEG6EhmsGiYgcsAv4oe8QPZHOQo782HcAEUmkhwjCV3yH6Ik0F/J9vgOISCLd7TtAT6W5kB8FNvgOISKJ8irwoO8QPZXeQg7COnC/7xgikig/Igi3+w7RU+kt5Mj3fAcQkUS5x3eA3kh7If8XsMp3CBFJhN2k/H/N6S7kINwL3OQ7hogkwnyCMNWXeEt3IUduBULfIUTEu6/5DtBb6S/k6F/EW33HEBGvFgH3+g7RW+kv5MhNwB7fIUTEm2sIwtRvp5CNQg7C1cA3fccQES+eIiMrrrJRyJEb0IZDInkUZGF0DFkq5CB8jhSfoSMiPbKQIPy+7xB9JTuFHLnedwARaarAd4C+lK1CDsJfAHf5jiEiTfE4QfiA7xB9KVuFHPl/wGbfIUSk3wW+A/S17BVyEK4HPuI7hoj0qx8QhFXfIfpa9goZIAjvINrnQkSyZxtwme8Q/SGbhRy5DEjlVQNE5LCuIghX+g7RH7JbyEFYA/7BdwwR6VPzCcLbfYfoL9kt5MhNwGO+Q4hIn9gKfMh3iP6U7UKOriryIWCv7ygi0muXEITLfYfoT9kuZIAgfBpNXYik3e0EYaqvBtIV2S9kgCC8Hvi67xgi0iPPAX/rO0Qz5KOQI5cQXalaRNJjO/A+gnCn7yDNkJ9CDsI9wLuApb6jiEiXRH9no2nHXMhPIQME4UbgLHTJJ5Gkc8BFBOFPfAdppnwVMnRs03kOsM93FBE5pKsIwm/7DtFs+StkgCCcT7QJkYgkz40E4Wd9h/Ahn4UMEIRfBD7vO4aIvMY3gY/5DuFLfgs58hHgu75DiAgA84EPZOVyTD1hzuX2s0eCwkDgTuBc31FEcmwBcDpBuMN3EJ/yPkKGINwHXADc4TuKSE49Cbw972UMKuRItOfFB4DbfEcRyZn5wJviC0vkngq5QzRvdRlwo+8oIjlxB1AiCLf7DpIUmkM+mKBwFXADYL6jiGTUdQThJ32HSBoV8qEEhQuArwKDfEcRyZB24HKC8Eu+gySRCvlwgsIZwL3ASN9RRDJgJ9FGQQ/6DpJUKuQjCQpzgbuB431HEUmxDUTzxb/1HSTJdFDvSKK9L04BvuY5iUhavQCcpjI+Mo2QuyMoXATcAgz3HUUkJW4HriQIdQX4LlAhd1dQOA64C01hiBzOZqJr4N3rO0iaaMqiu4JwMZrCEDmcnwAnqoy7TyPk3ggK7wduRlMYIhBd4eOTwGfyvEFQb6iQe0tTGCIQHbg7nyBc6DtImmnKoreiKYzXA/8A7PKcRsSHW4HXq4x7TyPkvhQUZhFten+W7ygiTbAK+DBBeJ/vIFmhQu4PQeGdwE3ATN9RRPrBXuDfgH/Wcra+pULuL0FhONEBjquAwZ7TiPSV6HqUQfiC7yBZpELub0HhWKKVGH/iO4pIL9SAjxKEuuRZP1IhN0tQOI9or+XJvqOIdEMIXAd8niDc7TtM1qmQmykoHAVcAfwdcLTnNCKHsxf4InANQbjJd5i8UCH7EBRGAZcTzS+P95xGpFGdaMvZTxCEL/oOkzcqZJ+iA39/DXwUmOQ5jeTbbuDrRGfZqYg9USEnQVAYClwKXA1M9ZxG8iUEvgDcRBCu9R0m71TISRIUhhBd/bqM1jBL/1oNfBa4VRcZTQ4VchIFhUHAhcDHgNd5TiPZ8jzRBXy/QRDu8R1GXkuFnHRB4Y+B/wu8C11wVXru18D1wH3aiS25VMhpERQmAh8ELgFmeU4j6bAG+E/g6wThIt9h5MhUyGkTFAYAbyGaaz4bGOY3kCTMLuD7RCsm5hOE7Z7zSDeokNMsOtHkfcD7gTf6DSMeOeARohK+myDc5jmP9JAKOSuCQitwPvDnRPszS/a9BNwJ3EkQ1jxnkT6gQs6ioDCNaE/mdxBtajTUbyDpQy8APwTuIgh/5TuM9C0VctYFhRHAGUTlfBYwwW8g6abtwMPAQ8BDGglnmwo5T6IDgqcQlfOfAyf4DSSHsIiOAoZHCcK9nvNIk6iQ8ywoFIlGz6fFt9cB5jNSTm0h2vi9YxS8xnMe8USFLAcEhTHAqRwo6FOBo7xmyh5HdDDu18Bv4tuTWp4moEKWw4mmOI7jQEFrFN19K4EngAVEJfwYQbjFbyRJKhWydE80ij4ZOBZoa7hNBwZ4TObbHmApUfl23J4kCDd6TSWpokKWvhFtITqHAwXd2vB9FlZ2OKJTkZcCy+Jb4/erCMK6v3iSBSpk6X9BoUBUzLOAiYe4jQeGe0i3l2hP4K0NX7cQXdSzsXhfJghf9ZBPckSFLMkRFAYDYw5yGwW0EE2JNN4Odl/jDWAbry3bxq8hQbizCZ9MpEtUyCIiCZHngzAiIomiQhYRSQgVsvQ7M3NmdmfDrwea2QYze9BnLpGkUSFLM7wCnGBmHZvpnwGs8phHJJFUyNIsPwRK8ffnAd/ymEUkkVTI0izfBs41s6HAiUR7OIhIAxWyNIVzbhFQJBod/8BvGpFkGug7gOTK/cBngNOBsX6jiCSPClma6StA6Jx72sxO9x1GJGlUyNI0zrmVwE2+c4gklU6dFhFJCB3UExFJCBWyiEhCqJBFRBJChSwikhAqZBGRhFAhi4gkhApZRCQhVMgiIgmhQhYRSQgVsohIQqiQRUQSQoUsIpIQKmQRkYRQIYuIJIQKWUQkIVTIIiIJoUIWEUkIFbKISEKokEVEEkKFLCKSEP8Lc/Lh9j6isqsAAAAASUVORK5CYII=
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">drawpie</span><span class="p">(</span><span class="s1">&#39;level&#39;</span><span class="p">,</span><span class="s2">&quot;User level ratio.&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWQAAAD7CAYAAABdXO4CAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAADl0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uIDIuMS4wLCBodHRwOi8vbWF0cGxvdGxpYi5vcmcvpW3flQAAGdRJREFUeJzt3Xu8XGV97/HPb3IhCSETyP2+UAKGSwCTkKRQoUhRHBBasS2gR0GFqkg9crSjVc6SUjuVWilyUC7ipSgoWD3IaIn2gFwFLJUg2UlMYJKQ+3Vyvz/nj7Uik00ue/aemWetNd/367Vee7Jmz8x355XXdz951nrWMuccIiLiX853ABERiaiQRUQSQoUsIpIQKmQRkYRQIYuIJIQKWUQkIVTIkghm9m0zu6nJn/FBM3uyyZ/xspmd08zPkOxSIcsfmJkzs+M67QvN7F5fmZLsQL9EnHMnOece8xRJUk6FLC1nZr19ZzicNGSU7FEhS5eZ2VAze9jMNpjZOjN7wsxy8XOjzexHZrbazF41s+tqXhea2YNmdq+ZbQQ+2IXPutDMfht/1tNmNjneXzSzBzt977+a2a3x47yZfdPMlpvZUjO7ycx6deHzgvh/CB8ys8XA/4v3P2BmK8ysamaPm9lJ8f6rgSuAz5jZZjP7aby/YmbnxY+PMLNbzGxZvN1iZkd04a9a2pQKWepxPfAaMAwYAXwOcHEp/xR4ERgDvB34pJm9o+a1FwMPAoOB7x3qQ8zsrcA9wDXAEOAO4KG4zO4D3mVmg+Lv7QX8BfD9+OXfAXYDxwGnA+cDH67jZzwbmATsy/5zYCIwHHhhX3bn3J3x4y875wY65y46wHv9HTADOA04FTgD+HwdWaTNqJClHruAUcAE59wu59wTLroYyjRgmHPuRufcTufcK8BdwF/VvPYZ59xPnHN7nXPbDvM5HwHucM4965zb45z7DrADmOGcW0RUjJfE33susNU592szGwFcAHzSObfFObcK+GqnHIcTxq/dBuCcu8c5t8k5twMIgVPNLN/F97oCuNE5t8o5txr4IvD+OrJIm1EhS609QJ9O+/oQFTHAzcACYJaZvWJmxXj/BGB0PL2wwcw2EI2eR9S8z5I6ckwAru/0fuOA0fHz3wcuix9fzuuj4wlx3uU1r7uDaHTbVX/IaWa9zKxkZgvjqZZK/NTQLr7XaGBRzZ8X1fwMIm+gAxdSazEQAB01+44F5gM45zYRTVtcH8+lPmpmzxOV2KvOuYmHeO96Liu4BPgH59w/HOT5B4CvmNlY4M+AmTWv2wEMdc7truPzDpbzcqKplvOIyjgPrAfsAN97IMuIfkm8HP95fLxP5IA0QpZaPwA+b2ZjzSwXH5y6iGjud9+BtuPMzICNRCPqPcBzwEYz+1sz6x+PLE82s2ndzHEX8NdmNt0iR5pZwcyOAoj/+/8Y8C2iXwQd8f7lwCyish4U/wxvNrOzu5njKKKCXwsMAL7U6fmVwJsO8fr7iP4+h5nZUOAGQKcQykGpkKXWjcDTwJNEI8EvA1c4534XPz8R+CWwGXgGuN0595hzbg9RcZ8GvAqsAe4mGlHWzTn3G6J55NviHAt445kZ3ycauX6/0/7/AfQF5sSvfZBo3rs7vks0zbA0fr9fd3r+m8CJ8fTITw7w+puA3wCzgZeI5r5vAjCz8fHZGeO7mU0yyHSBehGRZNAIWUQkIVTIIiIJoUIWEUkIFbKISEKokEVEEkKFLCKSECpkEZGEUCGLiCSECllEJCFUyCIiCaFCFhFJCBWyiEhCqJBFRBJChSwikhAqZKmLmV1nZh1mdsgblYpI/XQ9ZKmLmc0FLnDOvVqzr3cPbpkkIjGNkKXLzOwbRLcsesjMqmZ2p5nNAr4b37bpZjN73sxmm9k1Na/7dM3+L3r7AUQSTjc5lS5zzv21mb0T+BPgWqLbNp3lnNtmZlcDVefcNDM7AngqLuuJ8XYG0c1BHzKztznnHvf0Y4gklgpZeuIh59y2+PH5wGQzuzT+c56oiM+Pt/+O9w+M96uQRTpRIUtPbKl5bMAnnHOP1H6Dmb0D+Efn3B0tTSaSQppDlkZ5BPiomfUBMLPjzezIeP9VZjYw3j/GzIZ7zCmSWBohS6PcDQTAC2ZmwGrgEufcLDObBDwT7WYz8D5gla+gIkml095ERBJCUxYiIgmhQhYRSQgVsohIQuigniROUCz3Bo6Jt/5E/067svWqebwL2BRvG2u2TcCmSqmggyeSODqoJy0RFMt5YFS8jez0eBgwhKiAhwCDiM5rbhZHdLZHbVnve7wGWARU4m0RsKxSKuxtYh4RQIUsDRQUy32B44G3dNqOB47yGK2ndgJLeL2gK+xf2K+psKURVMhSt6BYPgaYxBuL91iiaYN2swt4BXixZvttpVRY6jWVpI4KWQ4pKJaPAmYCZ8bbqcBQr6HSYy1ROf8X8DzwXKVUWOQ3kiSZCln2ExTL44iK96z46ym056i3WVYRlzPwLPBUpVTY7DeSJIUKuY0FxXIOmMzro9+zgHFeQ7WfXcAzRNf8eAR4QWeAtC8VcpsJiuUxwMXAhUQlPMhvIulkDfALYBbwSKVUWO45j7SQCrkNBMXyicAl8TaV5p5SJo31EnE5A09USoXtnvNIE6mQMygolo3oQNwlRKPh4/0mkgbZRnRh/x8BD1RKhQ2e80iDqZAzIj4H+O1EJfxuogUXkl07gIeBfwN+VikVdnnOIw2gQk6xeCR8LnAV0f3t0rz4QrpvLfBD4N5KqfC07zDSfSrkFAqK5bHAlfF2rOc4kiwLge8B/1YpFRb4DiP1USGnRHzBnYuBDxPdNFRX6pPDeZZoSuP+Sqmw1ncYOTwVcsIFxfJI4Op4G+M5jqTTNuDbwFcqpcJCz1nkEFTICRUUy2cBHwfeA/TxHEeyYS/w78DNlVLhOd9h5I1UyAkTFMuXADcAp/vOIpn2OHAzUNbKwORQISdEUCxfBITAWz1HkfbSAfwz0RkaO32HaXcqZM+CYvkC4IvANN9ZpK0tB24FvqEFJ/6okD0JiuXziYp4hu8sIjU2AbcAX9ZV6FpPhdxiQbH8dqIiPtN3FpFDWEk0hXZ3pVTY7TlL21Aht0hQLL8NuBE423cWkTrMBYqVUuH/+g7SDlTITRYUyyOArwKX+c4i0gO/Aj5RKRVe8h0ky1TITRJfZ+LDwD8BR3uOI9IIe4CvA1/Qgb/mUCE3QXz94TuI7sAhkjWrgc8B9+hu242lQm6goFjuB3we+DTQ13MckWZ7DvhApVSY6ztIVqiQGyQ+e+LrwETfWURaaBvwvyqlwu2+g2SBCrmHgmJ5KPAvwPt9ZxHxqAxcVSkVVvkOkmYq5B6Ilzt/CxjiO4tIAqwCPlQpFR72HSStVMjdEBTLvYC/B4rohqEinX0DuL5SKmz1HSRtVMh1CorlYcB9RPevE5EDmwdcUSkV/st3kDRRIdchKJanAw8A43xnEUmBXUTLr0s6Pa5rVMhdFBTLHyNacafT2UTqMwu4tFIqbPIdJOlUyIcRFMsDiBZ5vM93FpEUexF4V6VUWOY7SJKpkA8hKJYnAj8CTvGdRSQDlhCV8u98B0kq3bn4IIJi+TzgeVTGIo0yDngyKJbP9R0kqVTIBxAUy+8hOtE97zuLSMbkgf8IimUtpDoAFXInQbF8JfADdPBOpFn6AN8NiuUv+A6SNJpDrhEUy58iuuGjFnuItMbdwEd1V5KICjkWFMufJ1p9JyKt9XPgzyqlwg7fQXzTlAUQFMt/h8pYxJcLgHuDYrnt+6jt/wKCYvmzwE2+c4i0uUuB23yH8K2tCzkolv8W+JLvHCICwEeDYvkG3yF8ats55KBY/iDRpTNFJFmuqZQKd/oO4UNbFnJ8kaBfAUf4ziIib7AHeG+lVPix7yCt1naFHBTLo4DfAKN9ZxGRg9oOvKNSKjzuO0grtdUcclAs9yW6NoXKWCTZ+gEPBcXyZN9BWqmtChm4HZjpO4SIdMm+ZdZtM4Bqm0IOiuWPAx/ynUNE6jIK+F67nKPcFj9kUCyfDdziO4eIdMs5wOd8h2iFzB/UC4rl8UQH8Yb5ziIi3bYHOLtSKjzlO0gzZbqQ4//mPA1M951FRHpsMXBqpVTY4DtIs2R9yuIaVMYiWTGejE89ZnaEHBTLw4luRT7YdxYRaahCpVT4me8QzZDlEfI/ozIWyaI7g2I5k3fzyWQhB8Xy2wDdIkYkm8YAX/UdohkyN2URFMt9gN8CJ/rOIiJNNaVSKrzgO0QjZXGE/ClUxiLt4EbfARotUyPk+JzjOcCRvrOISEtMr5QKz/kO0ShZGyHfgspYpJ1kapScmRFyUCyfAsz2nUNEWu6srKzgy9II+TrfAUTEi8yMkjMxQg6K5WOA14D+vrOIiBfnVEqFX/kO0VNZGSF/GJWxSDvLxCg59SPkoFjuBSwEJvjOIiJenVspFR71HaInsjBCvhiVsYjAlb4D9FQWCvkTvgOISCK8O75vZmqlupDjU93O8Z1DRBIhD5zvO0RPpLqQgWt9BxCRRHmv7wA9kdqDekGxbMBKdGsmEXldFRheKRV2+g7SHWkeIU9FZSwi+8sDf+o7RHeluZAv8B1ARBIptdMWKmQRyZqL03q2RSoLOSiWBwPTfOcQkUQaDLzdd4juSGUhA2cBvXyHEJHE+iPfAbojrYV8pu8AIpJop/gO0B1pLeTTfAcQkUSb7DtAd6S1kFP5209EWiYIiuWjfIeoV+oKOT6gN8Z3DhFJNCOFA7fUFTJwsu8AIpIKKuQWOM53ABFJhdQN3tJYyCN9BxCRVBjtO0C9VMgiklWpu9ZNGgt5hO8AIpIKKuQWGO47gIikggq5BQb4DiAiqTDYd4B6pbGQ05hZRFqvV3wji9To7TtAN6iQBQBj796JtnTxtNy8lcfaih2QzrvfSPO8sHeiQSE1/zBUyJIKY1i9Ykpu/tKZuTmbT8st6D3eVg0ZwI4JZgRA4DmeJJMjvH+v7xD1SGMh7/EdQJonz+YNU3LzF83MzalOyc23N9ny/CC2jM8ZI9Epj1KfXb4D1CuNhbzGdwDpuf7s2HqKvVKZkZuzblpu3p4TcksGDmHj2F7mRpDCgzGSSKm70WkaC3mV7wDSdb3Ys/sttnjR9NzcVdNzHTtOylUGDGf9yD7sGWvGib7zSaZt9R2gXipkaRDnAluxdFpu3rKZuTnbJtsrfcbYmmH92DnBjDcDb/adUNrOIt8B6qVClroNZ/3qKbn5r83Izdn01tyCXGArjh7ItglmjAXG+s4nElvgO0C90ljIK30HaBcD2brx9NyCxTNyHeun5ubtnWhL84PZPDZnbhgpXAUlbUeF3AIaITdYX3btOMkqi6bnOlZPz3Xsfktu8YBhVEf3tr1jSOElDEViKuQWSN28UFLECykWTc/NXTk917HjZHv1iFG2dnhfdk8w43jgeN8ZRRpooe8A9UpjIc8D1gJDfAdJsrG2evlUm7d0Rq5jy2m5Bb3G2aqh8UKKY4FjfecTaYHUjZDNudSsKvyDoFj+CXCx7xxJMJhN66fk5i+emevYt5Bi8CC2jDcj7zubiEebCKuDfIeoVxpHyABP0GaF3J8dWyfbwsrMXnPWTbN5e47PvXbUMWwcEy+kONp3PpGEmeM7QHekuZAzKV5IUZmR61h9Rq5j50m5Rf1GsH5Ub/aM00IKkS6b5TtAd6S1kF8AtgBH+g7Sfc4daytem5abu3xGrmPrZFvYN1pIsWuCGcehm7mK9MR/+A7QHamcQwYIiuVfAOf5ztEVw1m3emru90tm5l7edHpuQa8JtnLfQoqBvrOJZNB6YBhhNXUXIkvrCBmiaYtEFfJRbKnGCyk2TM3Nc8fZskGD2TxOCylEWuqXaSxjSH8he3EEO7fHCynWnJGbu2tSbvHAodFCitHAKb5yiQgAP/cdoLvSXMi/JrqaU9PusZdj756J9triM3JzV86IF1KMtHUj+rJ7vBknACc067NFpNtSOX8MKZ5DBgiK5e8C72/Ee4211cum2dxlM3IdW07NLew93lYN6c+OwIx+jXh/EWmJ2YTVU32H6K40j5AB7qHOQj6ajeum5OYvmREtpOBNtvzoQWwdb8ZoYHRzYopIi9znO0BPpL2QfwW8Aryp8xMD2L5lcm7hohm5jrVn2Ny9E3NLjzomuiPFcOCYlicVkWbbDtzlO0RPpHrKAuCE4o8/N9Feu3J6bu6qGbmOXZNyi/qPYP3IeCFFqm4BLiI98i3C6lW+Q/RE6guZMD+K6ApwfXxHERGvTies/tZ3iJ7I+Q7QY2F1OfCA7xgi4tWTaS9jyEIhR27xHUBEvPqa7wCNkI1CDqvPA0/7jiEiXiwF/t13iEbIRiFHPus7gIh4cRthdbfvEI2QnUIOq48DP/YdQ0RaahHwr75DNEp2CjnyaWCn7xAi0jKfJqxu8x2iUbJVyGF1IXCb7xgi0hKPEVYzdYZVtgo58vfAGt8hRKSp9gCf9B2i0bJXyGF1A/BF3zFEpKnuIqy+6DtEo2WvkCPfAOb6DiEiTbEe+ILvEM2QzUKOToG5BtjrO4qINFxIWM3ktGQ2Cxn2nQb3Jd8xRKSh/pMMH7jPbiFHQuAp3yFEpCFWAu8jrGb2f77ZLuToRoeXAxt8RxGRHtlLVMYrfAdppmwXMkBYXQx8xHcMEemRfySs/tJ3iGbLfiEDhNUHSfmdBETa2BPA//YdohXao5AjfwPM8R1CROqyBrgsnn7MvPYp5Gi9+6VE5zCKSPI54IOE1aW+g7RK+xQyQFjtAC4CMnMxEpEM+yRhtew7RCu1VyEDhNWngL8kWgsvIsl0E2H1Vt8hWq39ChkgrP6UaCWfiCTP1wmrmVwafTjtWcgAYfWbZHQ9vEiK/QC41ncIX8w55zuDX2H+a7TxPwCRBJkFXEhY3eU7iC/tO0J+3d8AmbrItUgKPQv8eTuXMaiQidfFXwF8z3cUkTY1G3gXYXWL7yC+qZCB+Lfy+4Gv+o4i0mYeBf6YsLrOd5Ak0BxyZ2H+M8A/+Y4h0gbuBz5AWNWNiWMaIXcWVr8MXAns9h1FJMO+AlyuMt6fRsgHE+YvBH4I9PcdRSRDHHA9YVXTgwegQj6UMP9HwMPA0b6jiGTADqIpih/4DpJUKuTDCfOTgB8Bk3xHEUmxKnAJYfUx30GSTHPIhxNdkGgacK/vKCIpNRuYpjI+PI2Q6xHmPwLcCvTzHUUkJe4Bro0vfyuHoUKuV5g/lWhl30TfUUQSbBvwMcLqt30HSRNNWdQrrL4ITCE6A0NE3mg2MFVlXD+NkHsizH8M+BfgCN9RRBLiVuAzhNUdvoOkkQq5p6IpjLuBqb6jiHi0CriSsPoz30HSTFMWPRVNYcwA/iew2XMakVZzRHd0n6Qy7jmNkBspzI8H/g9woe8oIi0wG/goYfVp30GyQoXcDGH+UqK5tFG+o4g0wRYgBG4hrOqaLw2kQm6WMJ8numrc1YB5TiPSKD8BriOsLvEdJItUyM0W5s8kmsY41XcUkR5YBHwivkGwNIkO6jVbWH0KOB24HFjgOY1IvapE0xMnqoybTyPkVgrzvYGrgBuAMZ7TiBzKFqLjIDcTVtf7DtMuVMg+hPl+wMeBzwJDPKcRqbUduB0oEVZX+w7TblTIPoX5QcD1wKeAgZ7TSHvbSXQ+8ZcIq8t8h2lXKuQkCPPDgCLRGRkqZmml3cB3gBsJq4t9h2l3KuQkCfODiUr5OjTHLM21gejSmLcRVl/1HUYiKuQkCvN9gL8gms443XMayZaXga8B9xJWt/gOI/tTISdddB7ztcB7gD6e00g67QEeAr5GWH3Udxg5OBVyWoT5kcA18aYl2dIVa4muRHi75ofTQYWcNtG5zOcBVwCXoIOAsr+9wKNE94C8n7C63XMeqYMKOc3C/ADg3UTl/A40pdHOngHuB35IWF3hO4x0jwo5K8L8EOC9ROV8JrqgUTt4kaiE7yesVjxnkQZQIWdRmJ8AXAb8JXCa5zTSWAuA+4D7CKsdvsNIY6mQsy7MjyKazngn8KfAMX4DSZ22A08CjwCPEFZf8pxHmkiF3E7CfA44A7iAqKCnoiv+JdHLwCyiEn6csLrNcx5pERVyO4vmnc8nKufzgNF+A7WttcAviEp4FmF1qec84okKWV4X5scB02u2KcAAr5myZw/wO+B54Ll4e4mwutdrKkkEFbIcXHTO88nsX9KT0Bkc9VhIVLr7Cvi/Catb/UaSpFIhS32iS4ZOA04CTqjZxvqMlQAbgN8D84G5RAX8PGF1nddUkioqZGmMMH8kcDz7l/QJ8b6srCbcTFS6tdt84PeE1TU+g0k2qJCl+aLrcIwCRgIjDvHV1yl524kOrK0BVtRsy+Ovy4AFhNXlnvJJm1AhS3KE+b7AcGAo0D/e+sVb/05fax/3AXYBO4jufFH79UD7tgPr2FfCmtOVhFAhi4gkhBYFiIgkhApZRCQhVMgiDWBmN5rZeQfYf46ZPewjk6RPb98BRLLAOXeD7wySfhohixyAmQVmNtfMvmNms83sQTMbYGY3mNnzZvY7M7vTzCz+/m+b2aXx43fGr30S+HOvP4ikigpZ5OBOAO50zk0GNgIfA25zzk1zzp1MdNrdhbUvMLN+wF3ARcAfE51jLdIlKmSRg1vinHsqfnwvcBbwJ2b2rJm9BJxLtIS81luAV51zv3fROaX3ti6upJ3mkEUOrvNJ+g64HZjqnFtiZiHRwpTDvU6kSzRCFjm48WY2M358GdGdOwDWmNlA4NIDvGYucKyZvbnmdSJdohGyyMF1AB8wszuILiT0deBo4CWgQnRFt/0457ab2dVA2czWEJX4yS1LLKmmpdMiB2BmAfBwfPBOpCU0ZSEikhAaIYuIJIRGyCIiCaFCFhFJCBWyiEhCqJBFRBJChSwikhAqZBGRhFAhi4gkhApZRCQhVMgiIgmhQhYRSQgVsohIQqiQRUQSQoUsIpIQKmQRkYRQIYuIJIQKWUQkIVTIIiIJoUIWEUmI/w8G5TxtJLUnaAAAAABJRU5ErkJggg==
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">drawpie</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span><span class="s2">&quot;User level ratio.&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
 "
 >
 </div>
@@ -14189,7 +14237,7 @@ only showing top 5 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create column Churn and mark rows for the users, who cancelled subscription, with Churn = 1</span>
@@ -14201,36 +14249,9 @@ only showing top 5 rows
     <span class="n">df_churn</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;userId&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">collect_list</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">))</span>
     <span class="c1"># define 1 as churned, 0 otherwise</span>
     <span class="n">churn_f</span> <span class="o">=</span> <span class="n">udf</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="s1">&#39;Cancel&#39;</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">df_churn</span> <span class="o">=</span> <span class="n">df_churn</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;churn&quot;</span><span class="p">,</span> <span class="n">churn_f</span><span class="p">(</span><span class="n">df_churn</span><span class="o">.</span><span class="n">pages</span><span class="p">))</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">)</span>
-    <span class="n">df_churn</span> <span class="o">=</span> <span class="n">df_churn</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;churn&quot;</span><span class="p">,</span> <span class="n">df_churn</span><span class="p">[</span><span class="s2">&quot;churn&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">IntegerType</span><span class="p">()))</span>
+    <span class="n">df_churn</span> <span class="o">=</span> <span class="n">df_churn</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">churn_f</span><span class="p">(</span><span class="n">df_churn</span><span class="o">.</span><span class="n">pages</span><span class="p">))</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">)</span>
+    <span class="n">df_churn</span> <span class="o">=</span> <span class="n">df_churn</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">df_churn</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">IntegerType</span><span class="p">()))</span>
     <span class="k">return</span> <span class="n">df_churn</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">GetData</span><span class="p">(</span><span class="s2">&quot;mini_sparkify_event_data.json&quot;</span><span class="p">)</span> 
-<span class="n">df</span> <span class="o">=</span> <span class="n">Clean_Data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_churn</span> <span class="o">=</span> <span class="n">Define_Churn</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14254,7 +14275,7 @@ only showing top 5 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">prepare_feature</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
@@ -14269,15 +14290,16 @@ only showing top 5 rows
 <span class="sd">    contains the following columns:</span>
 <span class="sd">    1. userId - initial id of the user</span>
 <span class="sd">    2. gender - user&#39;s gender</span>
-<span class="sd">    3. avg_events - average number of events per day for the user</span>
-<span class="sd">    4. avg_songs - average number of songs the user listens to per day</span>
-<span class="sd">    5. thumbs_up - total of thumbs up for each users</span>
-<span class="sd">    6. thumbs_down - total of thumbs down for each users</span>
-<span class="sd">    7. hour - last login hour</span>
-<span class="sd">    8. day - last login date</span>
-<span class="sd">    9. month - last login date</span>
-<span class="sd">    10. year - last login year</span>
-<span class="sd"> </span>
+<span class="sd">    3. songs_total - total songs of events per day for the user</span>
+<span class="sd">    4. thumbs_up - total of thumbs up for each users</span>
+<span class="sd">    5. thumbs_down - total of thumbs down for each users</span>
+<span class="sd">    6. downgrade_total - total numbers of downgrade</span>
+<span class="sd">    7. error count - total number errors the user had </span>
+<span class="sd">    8. hour - last login hour</span>
+<span class="sd">    9. day - last login date</span>
+<span class="sd">    10. month - last login date</span>
+<span class="sd">    11. year - last login year</span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">GetData</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> 
     <span class="n">df</span> <span class="o">=</span> <span class="n">Clean_Data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
@@ -14342,7 +14364,7 @@ only showing top 5 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_featured</span> <span class="o">=</span> <span class="n">prepare_feature</span><span class="p">(</span><span class="s2">&quot;mini_sparkify_event_data.json&quot;</span><span class="p">)</span>
@@ -14355,7 +14377,7 @@ only showing top 5 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_featured</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -14376,7 +14398,7 @@ only showing top 5 rows
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>+------+-------+-------+----+---+-----+----+-----------+--------------+----------------+--------------+-----------+-----+
-|userId|is_male|is_paid|hour|day|month|year|songs_total|thumbsup_Total|thumbsdown_total|downgradeTotal|error_count|churn|
+|userId|is_male|is_paid|hour|day|month|year|songs_total|thumbsup_Total|thumbsdown_total|downgradeTotal|error_count|label|
 +------+-------+-------+----+---+-----+----+-----------+--------------+----------------+--------------+-----------+-----+
 |   124|      0|      1|  15| 30|   11|2018|       4079|           171|              41|            41|          6|    0|
 |    51|      1|      1|   7| 17|   10|2018|       2111|           100|              21|            23|          1|    1|
@@ -14412,7 +14434,7 @@ only showing top 5 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">vector_assembler</span> <span class="o">=</span> <span class="n">VectorAssembler</span><span class="p">(</span><span class="n">inputCols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;hour&quot;</span><span class="p">,</span><span class="s2">&quot;day&quot;</span><span class="p">,</span><span class="s2">&quot;month&quot;</span><span class="p">,</span><span class="s2">&quot;year&quot;</span><span class="p">,</span><span class="s2">&quot;songs_total&quot;</span><span class="p">,</span> <span class="s2">&quot;thumbsup_Total&quot;</span><span class="p">,</span> <span class="s2">&quot;thumbsdown_total&quot;</span><span class="p">,</span> <span class="s2">&quot;downgradeTotal&quot;</span> <span class="p">,</span> <span class="s2">&quot;error_count&quot;</span><span class="p">],</span> <span class="n">outputCol</span><span class="o">=</span><span class="s2">&quot;rawFeatures&quot;</span><span class="p">)</span>
@@ -14429,7 +14451,7 @@ only showing top 5 rows
 <div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_ml</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;userId&#39;</span><span class="p">,</span> <span class="s1">&#39;churn&#39;</span><span class="p">,</span> <span class="s1">&#39;rawFeatures&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_ml</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;userId&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;rawFeatures&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14475,7 +14497,7 @@ only showing top 5 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">(</span><span class="n">inputCol</span><span class="o">=</span><span class="s2">&quot;rawFeatures&quot;</span><span class="p">,</span> <span class="n">outputCol</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">withStd</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -14493,7 +14515,7 @@ only showing top 5 rows
 <div class="prompt input_prompt">In&nbsp;[33]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_ml</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;userId&#39;</span><span class="p">,</span> <span class="s1">&#39;churn&#39;</span><span class="p">,</span> <span class="s1">&#39;features&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_ml</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;userId&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;features&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -14539,7 +14561,7 @@ only showing top 5 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="p">,</span> <span class="n">test_df</span> <span class="o">=</span> <span class="n">df_featured</span><span class="o">.</span><span class="n">randomSplit</span><span class="p">([</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
@@ -14552,10 +14574,10 @@ only showing top 5 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;churn&quot;</span><span class="p">,</span> <span class="n">featuresCol</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">numTrees</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">featuresCol</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">numTrees</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 
 <span class="c1"># assemble pipeline</span>
 <span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">stages</span> <span class="o">=</span> <span class="p">[</span><span class="n">vector_assembler</span><span class="p">,</span> <span class="n">scalerModel</span><span class="p">,</span> <span class="n">rfc</span><span class="p">])</span>
@@ -14568,7 +14590,7 @@ only showing top 5 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
@@ -14581,7 +14603,7 @@ only showing top 5 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pred_train</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
@@ -14595,11 +14617,35 @@ only showing top 5 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">f1_score_evaluator</span> <span class="o">=</span> <span class="n">MulticlassClassificationEvaluator</span><span class="p">(</span><span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;churn&quot;</span><span class="p">,</span> <span class="n">predictionCol</span><span class="o">=</span><span class="s2">&quot;prediction&quot;</span><span class="p">,</span><span class="n">metricName</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">)</span>
-<span class="n">f1_score</span> <span class="o">=</span> <span class="n">f1_score_evaluator</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">pred_test</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">EvaluateScores</span><span class="p">(</span><span class="n">pred_test</span><span class="p">):</span>
+    <span class="c1"># Compute raw scores on the test set</span>
+    <span class="n">predictionAndLabels</span> <span class="o">=</span> <span class="n">pred_test</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">lp</span><span class="p">:</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lp</span><span class="o">.</span><span class="n">prediction</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">lp</span><span class="o">.</span><span class="n">label</span><span class="p">)))</span>
+
+    <span class="c1"># Instantiate metrics object</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">MulticlassMetrics</span><span class="p">(</span><span class="n">predictionAndLabels</span><span class="p">)</span>
+
+    <span class="c1"># Overall statistics</span>
+    <span class="n">recall</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">recall</span><span class="p">()</span>
+    <span class="n">f1Score</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">fMeasure</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">recall</span><span class="p">,</span> <span class="n">f1Score</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">recall</span><span class="p">,</span> <span class="n">f1_score</span> <span class="o">=</span> <span class="n">EvaluateScores</span><span class="p">(</span><span class="n">pred_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Recall = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">recall</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;F1 score = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f1_score</span><span class="p">))</span>
 </pre></div>
 
@@ -14617,7 +14663,8 @@ only showing top 5 rows
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>F1 score = 0.928
+<pre>Recall = 0.866667
+F1 score = 0.866667
 </pre>
 </div>
 </div>
@@ -14626,15 +14673,63 @@ only showing top 5 rows
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Modelin-in-NaiveBayes-Classifiacation">Modelin in NaiveBayes Classifiacation<a class="anchor-link" href="#Modelin-in-NaiveBayes-Classifiacation">&#182;</a></h4>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[55]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">evaluator</span> <span class="o">=</span> <span class="n">MulticlassClassificationEvaluator</span><span class="p">(</span>
-    <span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;churn&quot;</span><span class="p">,</span> <span class="n">predictionCol</span><span class="o">=</span><span class="s2">&quot;prediction&quot;</span><span class="p">,</span> <span class="n">metricName</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
-<span class="n">accuracy</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">pred_test</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validation Error = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">accuracy</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">nb</span> <span class="o">=</span> <span class="n">NaiveBayes</span><span class="p">()</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">stages</span> <span class="o">=</span> <span class="p">[</span><span class="n">vector_assembler</span><span class="p">,</span> <span class="n">scalerModel</span><span class="p">,</span> <span class="n">nb</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pred_train</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
+<span class="n">pred_test</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_df</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">recall</span><span class="p">,</span> <span class="n">f1_score</span> <span class="o">=</span> <span class="n">EvaluateScores</span><span class="p">(</span><span class="n">pred_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Recall = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">recall</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;F1 score = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f1_score</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -14651,7 +14746,8 @@ only showing top 5 rows
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Validation Error = 0.0666667
+<pre>Recall = 0.8
+F1 score = 0.8
 </pre>
 </div>
 </div>
@@ -14663,7 +14759,461 @@ only showing top 5 rows
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h1><p>F1 Score is %92.8 and Error is %6. It is pretty good, the feature selection, the model and the related parameters choosen is pretty good.</p>
+<h4 id="Modelin-in-Logistic-Regression">Modelin in Logistic Regression<a class="anchor-link" href="#Modelin-in-Logistic-Regression">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lr</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">maxIter</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">stages</span> <span class="o">=</span> <span class="p">[</span><span class="n">vector_assembler</span><span class="p">,</span> <span class="n">scalerModel</span><span class="p">,</span> <span class="n">nb</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pred_train</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
+<span class="n">pred_test</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_df</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">recall</span><span class="p">,</span> <span class="n">f1_score</span> <span class="o">=</span> <span class="n">EvaluateScores</span><span class="p">(</span><span class="n">pred_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Recall = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">recall</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;F1 score = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f1_score</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Recall = 0.8
+F1 score = 0.8
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Models-Comparison">Models Comparison<a class="anchor-link" href="#Models-Comparison">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h6 id="Random-Forest">Random Forest<a class="anchor-link" href="#Random-Forest">&#182;</a></h6><p>Recall = 0.866667; F1 score = 0.866667</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h6 id="NaiveBayes-Forest">NaiveBayes Forest<a class="anchor-link" href="#NaiveBayes-Forest">&#182;</a></h6><p>Recall = 0.80 F1 score = 0.80</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h6 id="Logistic-Regression">Logistic Regression<a class="anchor-link" href="#Logistic-Regression">&#182;</a></h6><p>Recall = 0.80 F1 score = 0.80</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Refinement">Refinement<a class="anchor-link" href="#Refinement">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">paramGrid</span> <span class="o">=</span> <span class="n">ParamGridBuilder</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rfc</span><span class="o">.</span><span class="n">numTrees</span><span class="p">,</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rfc</span><span class="o">.</span><span class="n">maxDepth</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rfc</span><span class="o">.</span><span class="n">impurity</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;entropy&#39;</span><span class="p">,</span> <span class="s1">&#39;gini&#39;</span><span class="p">])</span>\
+    <span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">crossval</span> <span class="o">=</span> <span class="n">CrossValidator</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span>
+                          <span class="n">estimatorParamMaps</span><span class="o">=</span><span class="n">paramGrid</span><span class="p">,</span>
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">MulticlassClassificationEvaluator</span><span class="p">(),</span>
+                          <span class="n">numFolds</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cvModel</span> <span class="o">=</span> <span class="n">crossval</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pred_test</span> <span class="o">=</span> <span class="n">cvModel</span><span class="o">.</span><span class="n">bestModel</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_df</span><span class="p">)</span>
+<span class="n">recall</span><span class="p">,</span> <span class="n">f1_score</span> <span class="o">=</span> <span class="n">EvaluateScores</span><span class="p">(</span><span class="n">pred_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Refined Recall = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">recall</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Refined F1 score = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f1_score</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Refined Recall = 0.933333
+Refined F1 score = 0.933333
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># get validation parameters</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">[{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">cvModel</span><span class="o">.</span><span class="n">getEstimatorParamMaps</span><span class="p">()]</span>
+
+<span class="c1"># convert validation results to pandas dataframe</span>
+<span class="n">validation_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">([</span>
+    <span class="p">{</span><span class="n">cvModel</span><span class="o">.</span><span class="n">getEvaluator</span><span class="p">()</span><span class="o">.</span><span class="n">getMetricName</span><span class="p">():</span> <span class="n">metric</span><span class="p">,</span> <span class="o">**</span><span class="n">ps</span><span class="p">}</span> 
+    <span class="k">for</span> <span class="n">ps</span><span class="p">,</span> <span class="n">metric</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">cvModel</span><span class="o">.</span><span class="n">avgMetrics</span><span class="p">)</span>
+<span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">validation_results</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[22]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>f1</th>
+      <th>impurity</th>
+      <th>maxDepth</th>
+      <th>numTrees</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.903841</td>
+      <td>entropy</td>
+      <td>3</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.917725</td>
+      <td>gini</td>
+      <td>3</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.887520</td>
+      <td>entropy</td>
+      <td>5</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.909401</td>
+      <td>gini</td>
+      <td>5</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.887520</td>
+      <td>entropy</td>
+      <td>8</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.909401</td>
+      <td>gini</td>
+      <td>8</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.884942</td>
+      <td>entropy</td>
+      <td>3</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.905175</td>
+      <td>gini</td>
+      <td>3</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.901686</td>
+      <td>entropy</td>
+      <td>5</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.938385</td>
+      <td>gini</td>
+      <td>5</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>0.901686</td>
+      <td>entropy</td>
+      <td>8</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.951284</td>
+      <td>gini</td>
+      <td>8</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>0.852415</td>
+      <td>entropy</td>
+      <td>3</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>0.905175</td>
+      <td>gini</td>
+      <td>3</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>0.840861</td>
+      <td>entropy</td>
+      <td>5</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>0.920628</td>
+      <td>gini</td>
+      <td>5</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>0.840861</td>
+      <td>entropy</td>
+      <td>8</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>0.920628</td>
+      <td>gini</td>
+      <td>8</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>0.864134</td>
+      <td>entropy</td>
+      <td>3</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>0.929520</td>
+      <td>gini</td>
+      <td>3</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>0.866069</td>
+      <td>entropy</td>
+      <td>5</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>0.912776</td>
+      <td>gini</td>
+      <td>5</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>0.866069</td>
+      <td>entropy</td>
+      <td>8</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>0.912776</td>
+      <td>gini</td>
+      <td>8</td>
+      <td>50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h1><p>Random Forest produced  %6 better results than NaiveBayes and Logistic Regression both in recall and F1 score.</p>
+<p>Its initial F1 Score and recall are both %86.6. After refinement, Recall and F1 score improved to %%93.3</p>
+<p>Sparkify data has also variance of user expereince like song play, thumbs-up, thumbs-down, error. Random Forest did a better job by splitting nodes in each tree considering a limited number of the features.</p>
+<p>Navie Bayes produces better in categorial variables, whereas there are more numerical features in Sparkify data. That might be the reason that Navie Bayes has lower result than Random Forrest.</p>
+<p>Although, logistic regression might be exptected a better model because of a binary expected outcome churn and not churn, the data better modelled with both classification and regression on a Random Forest model.</p>
 
 </div>
 </div>
