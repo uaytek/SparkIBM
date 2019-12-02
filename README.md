@@ -7,6 +7,10 @@ This project uses the following software and python libraries
 - NumPy
 - Pandas
 
+## File Description
+
+Udacity_Sparkify .ipynb : Jupyter notebook 
+
 ## Project Overview
 The goal of this project is to analyse users interaction data and predict which group of users are expected to churn - either downgrading from premium to free or cancel thier subscriptions.
 
@@ -91,11 +95,14 @@ The next step is using coss validation to find the ideal hyper-parameters for Ra
 
 CrossValidator method used for refinement. The best solution in this model for RandomForestClassifier is impurity = gini, naxDepth =	8,	numTrees = 20 and with this parameter F1 Score is %95.1.
 
-## File Description
+## Result
+Sparkify data has variance of user expereince like song play, thumbs-up, thumbs-down, error. Random Forest did a better job by splitting nodes in each tree considering a limited number of the features.
 
-Udacity_Sparkify .ipynb : Jupyter notebook 
+Navie Bayes produces better in categorial variables, whereas there are more numerical features in Sparkify data. That might be the reason that Navie Bayes has lower results than Random Forrest.
 
-# Conclusion
+Logistic regression might be expected a better model because of a binary outcome churn and not churn, the data better modelled with both classification and regression on a Random Forest model.
+
+## Conclusion
  
 Although Sparkify project implementation initially started on Amazon Aws,  there was a session termination on StandartScalar code execution. The same code works properly on IBM Watson and Udacity workspace. Some modules like pandas, plotly are also needed to install on Amazon Aws before starting the project. Whereas on IBM Watson, after adding an initial code lines for dataset connection, no nwed any module installation and all code executed without session termination.  
 
