@@ -87,7 +87,7 @@ StandardScaler is also used for normalizing this single vector.
 
 ### Model Training
 
-RandomForestClassifier is used for modelling. Because the initial recall and F1 Score is high no other models used. 
+RandomForestClassifier, Naive Bayes and Logistic Regression are used for modelling.The initial recall and F1 Score is the highest on Random Forest. 
 
 The next step is using coss validation to find the ideal hyper-parameters for Random Fores Classifier.The ideal paramneters are MaxDepth 5 and numTrees = 20. 
 
@@ -102,7 +102,7 @@ Navie Bayes produces better in categorial variables, whereas there are more nume
 
 Logistic regression might be expected a better model because of a binary outcome churn and not churn, the data better modelled with both classification and regression on a Random Forest model
 
-It initially produced F1 Score and recall is %86.6. After refinement, the scores "Recall" and "F1 score" improved to %%93.3. With this result, it is time to continue with the refined model on a larger dataset. This will raise the robustness of the model and improve customer management.
+it is time to continue with the refined model on a larger dataset. This will raise the robustness of the model and improve customer management.
 
 ## Conclusion
  
