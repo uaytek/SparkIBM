@@ -110,7 +110,7 @@ Although Sparkify project implementation initially started on Amazon Aws,  there
 
 Sparkify data features are mostly system created like page info, time, user level, error; thus, not much effort needed to re-formatting its data or dealing with null values in feature. So, this project also shows that how application's logging processes should be taken into consideration to support machine learning algorithms during its development. 
  
- ## Future Improvements
+ ### Future Improvements
  
 - More features can be included like more user events such as Add Friend, Add a Playlist and location, status can also be included. 
 - Different user agents can be analysed in its own data because they might have different user experience. 
